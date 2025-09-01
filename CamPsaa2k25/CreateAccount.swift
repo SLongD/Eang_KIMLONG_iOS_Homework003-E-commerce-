@@ -14,6 +14,12 @@ struct CreateAccount: View {
     @State private var showPassword: Bool = false
     @Binding var isLoggedIn: Bool
     @Binding var currentTabIndex: Int
+    @State private var nameError = ""
+    @State private var emailError = ""
+    @State private var passwordError = ""
+    @State private var isNameValid = true
+    @State private var isEmailValid = true
+    @State private var isPasswordValid = true
     var body: some View {
         VStack(spacing:30){
             VStack(alignment: .leading){
@@ -31,26 +37,41 @@ struct CreateAccount: View {
                 textLabel: "User Name",
                 iconUrl: "person",
                 placeholder: "Create your user name",
-                text: $userName)
+                text: $userName,
+                validationType: .name,
+                errorMessage: $nameError,
+                isValid: $isNameValid)
             customTextField(
                 textLabel: "Email",
                 iconUrl: "envelope",
                 placeholder: "Enter email or phone number",
-                text: $email)
+                text: $email,
+                validationType: .email,
+                errorMessage: $emailError,
+                isValid: $isEmailValid)
             customSecureTextField(
                 textLabel: "Password",
                 iconUrl: "exclamationmark.lock",
                 placeholder: "Create your password",
                 text: $password,
-                isShowPw: $showPassword
+                isShowPw: $showPassword,
+                errorMessage: $passwordError,
+                isValid: $isPasswordValid
             )
             VStack{
                 customButton(
                     btnLabel: "Create Account",
-                    bgColor: .blue){
-                        isLoggedIn.toggle()
-                        currentTabIndex = 0
-                }
+                    bgColor: (!isFormValid ? .blue.opacity(0.5) : .blue)
+                    ){
+                        //if(){}
+                        if isFormValid {
+                            isLoggedIn.toggle()
+                            currentTabIndex = 0
+                        }
+//                        isLoggedIn.toggle()
+//                        currentTabIndex = 0
+                    }
+                    .disabled(!isFormValid)
                 customButton(
                     btnLabel: "Or using other method",
                     bgColor: .white,
@@ -78,11 +99,16 @@ struct CreateAccount: View {
         }
         
     }
-//    private func hideKeyboard() {
-//            UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
-//    }
+    private var isFormValid: Bool {
+        return !userName.isEmpty && isNameValid &&
+               !email.isEmpty && isEmailValid &&
+               !password.isEmpty && isPasswordValid
+    }
+    
 }
 
 #Preview {
-    //CreateAccount()
+//    @State var islog: Bool = false
+//    @State var index: Int = 0
+//    CreateAccount(isLoggedIn: $islog, currentTabIndex: $index)
 }

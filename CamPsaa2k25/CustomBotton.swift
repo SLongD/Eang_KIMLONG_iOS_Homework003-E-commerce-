@@ -20,6 +20,7 @@ func customButton(
             .padding()
             .frame(maxWidth: .infinity)
             .background(bgColor)
+            
             .cornerRadius(30)
     }
 }
